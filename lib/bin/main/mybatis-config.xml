@@ -10,6 +10,9 @@
 	<typeAliases>
 		<typeAlias type="com.ezen.mybatis.domain.employee.dto.Employee" alias="Employee" />
 		<typeAlias type="com.ezen.mybatis.domain.member.dto.Member" alias="Member" />
+		<typeAlias type="com.ezen.mybatis.domain.board.dto.BoardDTO" alias="Board" />
+		<typeAlias type="com.ezen.mybatis.domain.board.dto.ArticleDTO" alias="Article" />
+		<typeAlias type="com.ezen.mybatis.domain.common.web.PageParams" alias="PageParams" />
 	</typeAliases>
 
 	<!-- 다수의 Database에 접근하거나 개발, 테스트, 운영 환경에 맞는 다중 환경 설정 지원 -->
@@ -46,6 +49,8 @@
 		<!-- 자바 클래스패스에 위치한 XML 매퍼 파일 설정 -->
 		<mapper resource="com/ezen/mybatis/domain/employee/mapper/EmployeeMapper.xml" />
 		<mapper resource="com/ezen/mybatis/domain/member/mapper/MemberMapper.xml" />
+		<mapper resource="com/ezen/mybatis/domain/board/mapper/BoardMapper.xml" />
+		<mapper resource="com/ezen/mybatis/domain/board/mapper/ArticleMapper.xml" />
 		<!-- Annotation 기반 Mapper 인퍼페이스 경로 설정 -->
 		 <mapper class="com.ezen.mybatis.domain.employee.mapper.EmployeeMapper2" /> 
 	</mappers>

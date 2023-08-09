@@ -3,7 +3,9 @@ package com.ezen.mybatis;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -15,8 +17,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.ezen.mybatis.domain.employee.dto.Employee;
-import com.ezen.mybatis.domain.employee.mapper.EmployeeMapper;
 import com.ezen.mybatis.domain.member.dto.Member;
 import com.ezen.mybatis.domain.member.mapper.MemberMapper;
 
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MemberMapperTest {
+	private static final String namespace = "com.ezen.mybatis.domain.member.mapper.MemberMapper";
 	SqlSession sqlSession;	
 	
 	@BeforeEach
@@ -60,17 +61,18 @@ public class MemberMapperTest {
 		System.out.println(member);
 	}
 	
+
+	
 	@Test
-	@Disabled
-	public void findByUserTest(){
-		log.debug("==================== 아이디 비번으로 회원조회 ========================");
+	public void findByUserTest() {
 		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
 		Member member = mapper.findByUser("hong4829", "won4829");
-		log.debug("해당하는 회원: {}", member);
+		log.debug("회원 조회 : {}", member);
 	}
 	
 	@Test
 	@DisplayName("사원 등록")
+	@Disabled
 	public void CreateTest(){
 		Member member = new Member();
 		member.setId("aaa1234");

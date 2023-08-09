@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+                        
+<!-- 네임스페이스(사용영역) 설정 -->
+<mapper namespace="com.ezen.mybatis.domain.board.mapper.ArticleMapper">
+	
+		<!-- 자주 사용되고, 자바빈의 속성이름과 테이블 컬럼이름이 다른 경우 resultMap 선언 -->
+	<resultMap  id="article" type="com.ezen.mybatis.domain.board.dto.ArticleDTO">
+		<result property="articleId"           column="article_id"/>
+		<result property="boardId"        column="board_id"/>
+		<result property="groupNum"  column="group_no"/>
+		<result property="levelNum"     column="level_no"/>
+		<result property="orderNum"     column="order_no"/>
+	</resultMap>
+	
+	<!-- 신규 게시글 등록 -->
+	<insert id="create" parameterType="Article">
+		INSERT INTO article
+            	    (article_id,
+             		board_id,
+             		writer,
+             		subject,
+             		content,
+             		passwd,
+             		group_no,
+             		level_no,
+             		order_no)
+		VALUES     (article_id_seq.NEXTVAL, 
+		            #{boardId}, 
+		            #{writer}, 
+		            #{subject}, 
+		            #{content}, 
+		            #{passwd}, 
+		            article_id_seq.CURRVAL, 
+		            #{levelNum}, 
+		            #{orderNum}) 
+	</insert>
+	
+	<!-- 페이징 계산에 필요한 게시글 전체 갯수 반환 -->
+	<select id="getCountAll"  parameterType="PageParams" resultType="int">
+    	SELECT COUNT(article_id)
+    	FROM article
+    	WHERE board_id = #{boardId}
+        	AND writer LIKE '%' || #{keyword} || '%'
+        	OR subject LIKE '%' || #{keyword} || '%'
+        	OR content LIKE '%' || #{keyword} || '%'
+	</select>	
+	 
+	 <!-- 페이지당 보여지는 목록 갯수에 따른 게시글 목록 -->
+	<select id="findByAll" parameterType="PageParams" resultType="Article">
+		SELECT subject, 
+             writer, 
+             regdate, 
+             hitcount 
+		FROM   (SELECT CEIL(rownum / 10) request_page, 
+               subject, 
+               writer, 
+               TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI') regdate, 
+               hitcount 
+        		FROM   (SELECT subject, 
+                           writer, 
+                           regdate, 
+                           hitcount 
+                   	 FROM   article 
+                    	WHERE  board_id = #{boardId}
+                            AND writer  LIKE '%' || #{keyword} || '%'
+                            OR subject LIKE '%' || #{keyword} || '%'
+                            OR content LIKE '%' || #{keyword} || '%'
+                    	ORDER  BY group_no DESC, 
+                              order_no ASC)) 
+				WHERE  request_page = #{requestPage}
+	</select>
+	 
+	 <!-- 댓글 등록 -->
+	 <select id="createReply" parameterType="Article">
+	 	INSERT INTO article
+            (article_id,
+             board_id,
+             writer,
+             subject,
+             content,
+             passwd,
+             group_no,
+             level_no,
+             order_no)
+		VALUES      (article_id_seq.NEXTVAL,
+             #{boardId},
+             #{writer},
+             #{subject},
+             #{content},
+             #{passwd},
+             #{groupNum},
+             #{levelNum} + 1,
+             (SELECT MAX(order_no) + 1
+              FROM   article
+              WHERE  board_id = #{boardId}
+                     AND group_no = #{groupNum}));
+	 </select>
+	
+	<!-- 메인 게시글 찾기  -->
+	 <select id="findArticle" resultType="Article">
+	    SELECT *
+        FROM article
+        WHERE group_no = #{groupNum};
+	 </select>
+
+</mapper>

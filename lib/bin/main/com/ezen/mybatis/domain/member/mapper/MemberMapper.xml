@@ -24,15 +24,16 @@
 		WHERE id = #{value}
 	</select>
 	
-	<select id="findByUser" parameterType="map" resultType="Member">
-		SELECT id, 
-            passwd, 
-            name, 
-            email,
-            TO_CHAR(regdate, 'yyyy-MM-DD DAY') AS regdate 
-		FROM member
-		WHERE id = #{value} AND passwd = #{value}
-	</select>
+	<select id="findByUser"  parameterType="string" resultType="Member">
+		SELECT id,
+    		   passwd,
+    		   name,
+    		   email,
+    		   regdate
+		FROM   member
+		WHERE  id = #{id}
+    		AND passwd = #{passwd}
+	</select>	
 	
 	<insert id="create" parameterType="Member">
 		INSERT INTO member

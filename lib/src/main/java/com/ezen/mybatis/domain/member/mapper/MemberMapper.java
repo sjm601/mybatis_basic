@@ -2,6 +2,8 @@ package com.ezen.mybatis.domain.member.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ezen.mybatis.domain.member.dto.Member;
 
 /**
@@ -14,7 +16,7 @@ public interface MemberMapper {
 	/** 회원 생성 */
 	public boolean create(Member member);
 	/** 회원 검색 */
-	public Member findByUser(String id, String passwd);
+	public Member findByUser(@Param("id") String id,@Param("passwd") String passwd);
 	/** 전체 회원 출력 */
 	public List<Member> findByAll();
 	/** 아이디로 회원 검색 */
