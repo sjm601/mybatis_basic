@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+                        
+<mapper namespace="com.ezen.mybatis.domain.member.mapper.MemberMapper">
+
+	<select id="findByAll" resultType="Member">
+		SELECT id, 
+            passwd,
+            name,
+            email,
+            TO_CHAR(regdate, 'yyyy-MM-DD DAY') AS regdate
+		FROM member
+		ORDER BY regdate ASC
+	</select>
+	
+	<select id="findById" parameterType="string" resultType="Member">
+		SELECT id, 
+            passwd,
+            name,
+            email,
+            TO_CHAR(regdate, 'yyyy-MM-DD DAY') AS regdate
+		FROM member
+		WHERE id = #{value}
+	</select>
+	
+	<select id="findByUser" parameterType="map" resultType="Member">
+		SELECT id, 
+            passwd, 
+            name, 
+            email,
+            TO_CHAR(regdate, 'yyyy-MM-DD DAY') AS regdate 
+		FROM member
+		WHERE id = #{value} AND passwd = #{value}
+	</select>
+	
+	<insert id="create" parameterType="Member">
+		INSERT INTO member
+                    (id,
+                    passwd,
+                    name,
+                    email,
+                    regdate)
+		VALUES (#{id},
+				#{passwd},
+				#{name},
+				#{email},
+				TO_DATE(#{regdate}, 'YYYY-MM-DD'))
+	</insert>
+		
+	<update id="update" parameterType="Member">
+		UPDATE member
+		SET    name = #{name}
+		WHERE  id = #{id}
+	</update>
+	
+	<update id="update2" parameterType="Member">
+		UPDATE member
+		<set>
+	        <if test="name != null">name = #{name},</if>
+	        <if test="passwd != null">passwd = #{passwd},</if>
+	        <if test="email != null">email = #{email}</if>
+	    </set>
+	    WHERE id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="string">
+		DELETE FROM member
+		WHERE  id = #{value}
+	</delete>
+</mapper>
